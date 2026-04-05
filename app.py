@@ -27,8 +27,10 @@ from sklearn.metrics import (
 from sklearn.model_selection import train_test_split
 
 from config import (
+    AGE_BINS,
     AGE_DEFAULT,
     AGE_GROUP_NAMES,
+    AGE_LABELS,
     AGE_MAX,
     AGE_MIN,
     APP_DESCRIPTION,
@@ -39,11 +41,16 @@ from config import (
     COLOR_POSITIVE,
     COLOR_PRIMARY,
     COLOR_SECONDARY,
+    GENDER_LABELS,
+    SALARY_BINS,
     SALARY_DEFAULT,
+    SALARY_LABELS,
     SALARY_LEVEL_NAMES,
     SALARY_MAX,
     SALARY_MIN,
     SALARY_STEP,
+    YOUNG_RICH_AGE_THRESHOLD,
+    YOUNG_RICH_SALARY_THRESHOLD,
 )
 from utils import (
     compute_dataset_stats,
@@ -254,7 +261,7 @@ elif page == "🔮 Tahmin":
         st.subheader("Kullanıcı Bilgileri")
         with st.form("prediction_form"):
             gender = st.selectbox("Cinsiyet", options=["Female", "Male"],
-                                  format_func=lambda x: "Kadın" if x == "Female" else "Erkek")
+                                  format_func=lambda x: GENDER_LABELS[x])
             age = st.slider("Yaş", min_value=AGE_MIN, max_value=AGE_MAX,
                             value=AGE_DEFAULT, step=1)
             salary = st.slider(
@@ -268,10 +275,10 @@ elif page == "🔮 Tahmin":
         # Feature info
         st.markdown("#### Hesaplanan Özellikler")
         salary_level = pd.cut(
-            [salary], bins=[15000, 43000, 70000, 88000, 150000], labels=[1, 2, 3, 4]
+            [salary], bins=SALARY_BINS, labels=SALARY_LABELS
         )[0]
-        age_group = pd.cut([age], bins=[18, 30, 40, 50, 60], labels=[1, 2, 3, 4])[0]
-        is_young_rich = int(age < 30 and salary > 50000)
+        age_group = pd.cut([age], bins=AGE_BINS, labels=AGE_LABELS)[0]
+        is_young_rich = int(age < YOUNG_RICH_AGE_THRESHOLD and salary > YOUNG_RICH_SALARY_THRESHOLD)
 
         feat_data = {
             "Özellik": ["Yaş Grubu", "Maaş Seviyesi", "Genç-Zengin"],
@@ -508,12 +515,12 @@ elif page == "📊 Veri Analizi":
 
         df_bins = df_raw.copy()
         df_bins["AgeGroup"] = pd.cut(
-            df_bins["Age"], bins=[18, 30, 40, 50, 60],
+            df_bins["Age"], bins=AGE_BINS,
             labels=["18-30", "30-40", "40-50", "50-60"],
         )
         df_bins["SalaryLevel"] = pd.cut(
             df_bins["EstimatedSalary"],
-            bins=[15000, 43000, 70000, 88000, 150000],
+            bins=SALARY_BINS,
             labels=["Düşük", "Orta-Düşük", "Orta-Yüksek", "Yüksek"],
         )
 
@@ -583,7 +590,8 @@ elif page == "📊 Veri Analizi":
         st.subheader("Genç-Zengin Segmenti")
         yr_counts = df_raw.copy()
         yr_counts["IsYoungRich"] = (
-            (yr_counts["Age"] < 30) & (yr_counts["EstimatedSalary"] > 50000)
+            (yr_counts["Age"] < YOUNG_RICH_AGE_THRESHOLD)
+            & (yr_counts["EstimatedSalary"] > YOUNG_RICH_SALARY_THRESHOLD)
         ).astype(int)
         yr_purchase = yr_counts.groupby("IsYoungRich")["Purchased"].mean() * 100
 

@@ -67,3 +67,6 @@ COLOR_NEGATIVE = "#e74c3c"   # purchase → no
 COLOR_PRIMARY = "#3498db"
 COLOR_SECONDARY = "#9b59b6"
 COLOR_ACCENT = "#f39c12"
+
+# ── Gender display labels ─────────────────────────────────────────────────────
+GENDER_LABELS = {"Female": "Kadın", "Male": "Erkek"}
