@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from config import (
+from app_config import (
     AGE_BINS,
     AGE_LABELS,
     DATASET_PATH,

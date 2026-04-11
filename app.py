@@ -26,7 +26,7 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import train_test_split
 
-from config import (
+from app_config import (
     AGE_BINS,
     AGE_DEFAULT,
     AGE_GROUP_NAMES,
