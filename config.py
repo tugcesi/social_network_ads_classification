@@ -1,2 +1,1 @@
-# This file is kept for backwards compatibility. Use app_config instead.
-from app_config import *
+# This file has been merged into app.py. Kept empty for compatibility.
